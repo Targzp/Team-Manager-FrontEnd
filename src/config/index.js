@@ -1,7 +1,5 @@
-
 /**
  * @description: 环境配置封装
- * 
  */
 const env = import.meta.env.MODE || 'prod'
 const EnvConfig = {
@@ -21,5 +19,6 @@ const EnvConfig = {
 export default {
   env: env,
   mock: true,
+  namespace: 'manager',
   ...EnvConfig[env]
 }

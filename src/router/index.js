@@ -1,3 +1,11 @@
+/*
+ * @Author: 胡晨明
+ * @Date: 2021-08-15 21:12:02
+ * @LastEditTime: 2021-08-17 14:59:17
+ * @LastEditors: Please set LastEditors
+ * @Description: 前端路由配置
+ * @FilePath: \bloge:\Vue_store\manager-fe\src\router\index.js
+ */
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
