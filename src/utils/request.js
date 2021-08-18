@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-16 20:38:12
- * @LastEditTime: 2021-08-16 21:18:41
+ * @LastEditTime: 2021-08-18 22:04:04
  * @Description: axios 二次封装
  * @FilePath: \bloge:\Vue_store\manager-fe\src\utils\request.js
  */
@@ -30,10 +30,10 @@ service.interceptors.request.use((req) => {
 
 // 响应拦截
 service.interceptors.response.use((res) => {
-  const { errno, data, msg } = res.data
-  if (errno === 200) {
+  const { code, data, msg } = res.data
+  if (code === 200) {
     return data
-  } else if (errno === 4001) {
+  } else if (code === 4001) {
     ElMessage.error(TOKEN_INVALID)
     setTimeout(() => {
         router.push('/login')
@@ -54,6 +54,10 @@ function request (options) {
 
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data
+  }
+
+  if (typeof options.mock != 'undefined') {
+    config.mock = options.mock
   }
 
   if (config.env === 'prod') {
