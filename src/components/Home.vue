@@ -1,16 +1,68 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-15 15:53:55
- * @LastEditTime: 2021-08-17 15:35:59
+ * @LastEditTime: 2021-08-19 22:31:32
  * @LastEditors: Please set LastEditors
  * @Description: 首页
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Home.vue
 -->
 <template>
   <div class="basic-layout">
-    <div class="nav-side"></div>
-    <div class="content-right">
-      <div class="nav-top"></div>
+    <div :class="['nav-side',isCollapse?'fold':'unfold']">
+      <!-- 系统 logo -->
+      <div class="logo">
+        <img src="../assets/images/logo.png" alt="">
+        <span>WorkTile</span>
+      </div>
+      <!-- 导航菜单 -->
+      <el-menu
+        background-color="#001529"
+        text-color="#FFF"
+        :collapse="isCollapse"
+        router
+        default-active="1"
+        class="nav-menu">
+        <el-submenu index="1">
+          <template #title>
+            <i class="el-icon-setting"></i>
+            <span>系统管理</span>
+          </template>
+          <el-menu-item index="1-1">用户管理</el-menu-item>
+          <el-menu-item index="1-2">菜单管理</el-menu-item>
+        </el-submenu>
+        <el-submenu index="2">
+          <template #title>
+            <i class="el-icon-setting"></i>
+            <span>审批管理</span>
+          </template>
+          <el-menu-item index="2-1">休假申请</el-menu-item>
+          <el-menu-item index="2-2">待我审批</el-menu-item>
+        </el-submenu>
+      </el-menu>
+    </div>
+    <div :class="['content-right', isCollapse?'fold':'unfold']">
+      <div class="nav-top">
+        <div class="nav-left">
+          <div class="menu-fold" @click="toggle"><i class="el-icon-s-fold"></i></div>
+          <div class="bread">面包屑</div>
+        </div>
+        <div class="user-info">
+          <el-badge is-dot="true" class="notice" type="danger">
+            <i class="el-icon-bell"></i>
+          </el-badge>
+          <el-dropdown @command="handleLogOut">
+            <span class="user-link">
+              {{userInfo.userName}}
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item cpmmand="email">{{userInfo.userEmail}}</el-dropdown-item>
+                <el-dropdown-item command="logout">退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+      </div>
       <div class="wrapper">
         <div class="main-page">
           <router-view></router-view>
@@ -20,10 +72,39 @@
   </div>
 </template>
 
-<script setup>
+<script>
+export default {
+  name: 'Home',
+  data () {
+    return {
+      isCollapse: false,
+      userInfo: {
+        userName: 'Jack',
+        userEmail: 'jack@admin.com'
+      }
+    }
+  },
+  methods: {
+    /**
+     * @description: 控制菜单栏缩放
+     */    
+    toggle () {
+      this.isCollapse = !this.isCollapse
+    },
+    /**
+     * @description: 控制退出登录
+     */    
+    handleLogOut (key) {
+      if (key === "email") return;
+      this.$store.commit('saveUserInfo', '')
+      this.userInfo = null
+      this.$router.push('/login')
+    }
+  },
+}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .basic-layout {
   position: relative;
   .nav-side {
@@ -33,10 +114,44 @@
     background-color: #001529;
     color: #FFF;
     overflow-y: auto;
+    overflow-x: hidden;
     transition: width .5s;
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      height: 50px;
+      margin-top: 5px;
+      img {
+        width: 40px;
+        height: 40px;
+        margin: 0 16px;
+      }
+    }
+    .nav-menu {
+      border-right: none;
+    }
+    /* 合并 */
+    /* 这个选择器表示同时具有 nav-side 和 fold 的元素 */
+    &.fold {
+      width: 64px;
+    }
+    /* 展开 */
+    &.unfold {
+      width: 200px;
+    }
   }
   .content-right {
+    transition: .5s margin-left;
     margin-left: 200px;
+    /* 合并 */
+    &.fold {
+      margin-left: 64px;
+    }
+    /* 展开 */
+    &.unfold {
+      margin-left: 200px;
+    }
     .nav-top {
       height: 50px;
       line-height: 50px;
@@ -44,6 +159,24 @@
       justify-content: space-between;
       border-bottom: 1px solid #ddd;
       padding: 0 20px;
+      .nav-left {
+        display: flex;
+        align-items: center;
+        .menu-fold {
+          margin-right: 15px;
+          font-size: 18px;
+        }
+      }
+      .user-info {
+        .notice {
+          line-height: 25px;
+          margin-right: 15px;
+        }
+        .user-link {
+          cursor: pointer;
+          color: #409eff;
+        }
+      }
     }
     .wrapper {
       background: #eef0f3;
@@ -51,6 +184,8 @@
       height: calc(100vh - 50px);
       .main-page {
         background: #FFF;
+        min-width: 955px;
+        min-height: 450px;
         height: 100%;
       }
     }
