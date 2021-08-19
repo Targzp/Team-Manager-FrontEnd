@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-16 20:38:12
- * @LastEditTime: 2021-08-18 22:04:04
+ * @LastEditTime: 2021-08-19 14:45:03
  * @Description: axios 二次封装
  * @FilePath: \bloge:\Vue_store\manager-fe\src\utils\request.js
  */
@@ -33,7 +33,7 @@ service.interceptors.response.use((res) => {
   const { code, data, msg } = res.data
   if (code === 200) {
     return data
-  } else if (code === 4001) {
+  } else if (code === 50001) {
     ElMessage.error(TOKEN_INVALID)
     setTimeout(() => {
         router.push('/login')

@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-16 12:48:28
- * @LastEditTime: 2021-08-18 22:22:52
+ * @LastEditTime: 2021-08-19 14:53:33
  * @Description: 登录页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Login.vue
 -->
@@ -55,7 +55,7 @@ export default {
       this.$refs.userForm.validate(async (valid) => {
         if (valid) {
           const res = await this.$api.login(this.user)
-          if (res.userId) {
+          if (res.userName) {
             this.$store.commit('saveUserInfo', res)
             this.$router.push('/welcome')
           }
