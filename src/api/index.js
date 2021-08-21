@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:11:23
- * @LastEditTime: 2021-08-20 13:53:28
+ * @LastEditTime: 2021-08-21 21:02:14
  * @LastEditors: Please set LastEditors
  * @Description: api 管理
  * @FilePath: \bloge:\Vue_store\manager-fe\src\api\index.js
@@ -13,6 +13,7 @@ export default {
       method: 'post',
       url: '/users/login',
       data: params,
+      mock: false
     })
   },
   noticeCount () {
@@ -20,6 +21,7 @@ export default {
       method: 'get',
       url: '/leave/count',
       data: {},
+      mock: true
     })
   },
   getMenuList () {
@@ -27,6 +29,7 @@ export default {
       method: 'get',
       url: '/menu/list',
       data: {},
+      mock: true
     })
   }
 }

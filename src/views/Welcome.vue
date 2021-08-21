@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-16 12:48:17
- * @LastEditTime: 2021-08-19 16:01:25
+ * @LastEditTime: 2021-08-21 22:17:54
  * @Description: 欢迎页
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Welcome.vue
 -->
@@ -24,6 +24,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #fff;
   .content {
     position: relative;
     bottom: 40px;

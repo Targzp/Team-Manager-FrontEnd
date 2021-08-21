@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-15 15:53:55
- * @LastEditTime: 2021-08-20 22:29:18
+ * @LastEditTime: 2021-08-21 22:29:49
  * @LastEditors: Please set LastEditors
  * @Description: 首页
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Home.vue
@@ -51,9 +51,7 @@
         </div>
       </div>
       <div class="wrapper">
-        <div class="main-page">
-          <router-view></router-view>
-        </div>
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -161,6 +159,7 @@ export default {
     }
   }
   .content-right {
+    min-width: 955px;
     transition: .5s margin-left;
     margin-left: 200px;
     /* 合并 */
@@ -201,13 +200,6 @@ export default {
       background: #eef0f3;
       padding: 20px;
       height: calc(100vh - 50px);
-      .main-page {
-        background: #ffffff;
-        backdrop-filter: blur(20px);
-        min-width: 955px;
-        min-height: 450px;
-        height: 100%;
-      }
     }
   }
 }

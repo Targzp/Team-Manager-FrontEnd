@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-16 22:00:56
- * @LastEditTime: 2021-08-18 22:24:08
+ * @LastEditTime: 2021-08-21 22:22:36
  * @Description: 入口文件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\main.js
  */
@@ -21,4 +21,4 @@ const app = createApp(App)
 app.config.globalProperties.$request = request
 app.config.globalProperties.$storage = storage
 app.config.globalProperties.$api = api
-app.use(router).use(store).use(ElementPlus).mount('#app')
+app.use(router).use(store).use(ElementPlus, { size: 'small', zIndex: 3000 }).mount('#app')

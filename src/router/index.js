@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:12:02
- * @LastEditTime: 2021-08-20 21:48:37
+ * @LastEditTime: 2021-08-21 21:14:58
  * @LastEditors: Please set LastEditors
  * @Description: 前端路由配置
  * @FilePath: \bloge:\Vue_store\manager-fe\src\router\index.js
@@ -33,17 +33,7 @@ const routes = [
         meta: {
           title: '用户管理'
         },
-        component: () => import('@/views/Welcome.vue'),
-        children: [
-          {
-            name: '信息统计',
-            path: 'info',
-            meta: {
-              title: '信息统计'
-            },
-            component: () => import('@/views/Welcome.vue')
-          }
-        ]
+        component: () => import('@/views/User.vue'),
       }
     ]
   },
