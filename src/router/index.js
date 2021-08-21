@@ -1,13 +1,13 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:12:02
- * @LastEditTime: 2021-08-18 15:35:36
+ * @LastEditTime: 2021-08-20 21:48:37
  * @LastEditors: Please set LastEditors
  * @Description: 前端路由配置
  * @FilePath: \bloge:\Vue_store\manager-fe\src\router\index.js
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../components/Home.vue'
+import Home from '@/components/Home.vue'
 
 const routes = [
   {
@@ -23,9 +23,27 @@ const routes = [
         name: 'Welcome',
         path: 'welcome',
         meta: {
-          title: '欢迎页'
+          title: '欢迎使用 WorkTile'
         },
-        component: () => import('../views/Welcome.vue')
+        component: () => import('@/views/Welcome.vue')
+      },
+      {
+        name: 'User',
+        path: 'user',
+        meta: {
+          title: '用户管理'
+        },
+        component: () => import('@/views/Welcome.vue'),
+        children: [
+          {
+            name: '信息统计',
+            path: 'info',
+            meta: {
+              title: '信息统计'
+            },
+            component: () => import('@/views/Welcome.vue')
+          }
+        ]
       }
     ]
   },
@@ -35,7 +53,7 @@ const routes = [
     meta: {
       title: '登录'
     },
-    component: () => import('../views/Login.vue')
+    component: () => import('@/views/Login.vue')
   }
 ]
 

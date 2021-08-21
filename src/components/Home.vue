@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-15 15:53:55
- * @LastEditTime: 2021-08-20 15:43:17
+ * @LastEditTime: 2021-08-20 22:29:18
  * @LastEditors: Please set LastEditors
  * @Description: 首页
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Home.vue
@@ -29,7 +29,9 @@
       <div class="nav-top">
         <div class="nav-left">
           <div class="menu-fold" @click="toggle"><i class="el-icon-s-fold"></i></div>
-          <div class="bread">面包屑</div>
+          <div class="bread">
+            <bread-crumb />
+          </div>
         </div>
         <div class="user-info">
           <el-badge :is-dot="!!noticeCount" class="notice" type="danger">
@@ -59,10 +61,12 @@
 
 <script>
 import TreeMenu from './TreeMenu.vue'
+import BreadCrumb from './BreadCrumb.vue'
 export default {
   name: 'Home',
   components: {
-    TreeMenu
+    TreeMenu,
+    BreadCrumb
   },
   data () {
     return {
@@ -179,7 +183,7 @@ export default {
         align-items: center;
         .menu-fold {
           margin-right: 15px;
-          font-size: 18px;
+          font-size: 20px;
         }
       }
       .user-info {
@@ -198,7 +202,8 @@ export default {
       padding: 20px;
       height: calc(100vh - 50px);
       .main-page {
-        background: #FFF;
+        background: #ffffff;
+        backdrop-filter: blur(20px);
         min-width: 955px;
         min-height: 450px;
         height: 100%;
