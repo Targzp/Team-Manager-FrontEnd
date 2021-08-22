@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-16 22:00:56
- * @LastEditTime: 2021-08-21 22:22:36
+ * @LastEditTime: 2021-08-22 13:02:56
  * @Description: 入口文件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\main.js
  */
@@ -18,6 +18,7 @@ import './assets/style/index.scss'
 import './assets/style/reset.css'
 
 const app = createApp(App)
+/* Vue2 中挂在全局变量，Vue3 中不推荐 */
 app.config.globalProperties.$request = request
 app.config.globalProperties.$storage = storage
 app.config.globalProperties.$api = api
