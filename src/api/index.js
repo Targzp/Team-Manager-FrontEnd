@@ -8,7 +8,7 @@
  */
 import request from '../utils/request'
 export default {
-  login (params) {
+  login(params) {
     return request({
       method: 'post',
       url: '/users/login',
@@ -16,7 +16,7 @@ export default {
       mock: false
     })
   },
-  noticeCount () {
+  noticeCount() {
     return request({
       method: 'get',
       url: '/leave/count',
@@ -24,7 +24,7 @@ export default {
       mock: true
     })
   },
-  getMenuList () {
+  getMenuList() {
     return request({
       method: 'get',
       url: '/menu/list',
@@ -32,15 +32,15 @@ export default {
       mock: true
     })
   },
-  getUserList (params) {
+  getUserList(params) {
     return request({
       method: 'get',
       url: '/users/list',
       data: params,
-      mock: true
+      mock: false
     })
   },
-  userDel (params) {
+  userDel(params) {
     return request({
       method: 'post',
       url: '/users/delete',
@@ -48,4 +48,28 @@ export default {
       mock: true
     })
   },
+  getRoleList() {
+    return request({
+      method: 'get',
+      url: '/roles/allList',
+      data: {},
+      mock: true
+    })
+  },
+  getDeptList() {
+    return request({
+      method: 'get',
+      url: '/dept/list',
+      data: {},
+      mock: true
+    })
+  },
+  userSubmit(params) {
+    return request({
+      method: 'post',
+      url: '/users/operate',
+      data: params,
+      mock: true
+    })
+  }
 }
