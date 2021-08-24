@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:11:23
- * @LastEditTime: 2021-08-22 15:30:23
+ * @LastEditTime: 2021-08-24 16:13:08
  * @LastEditors: Please set LastEditors
  * @Description: api 管理
  * @FilePath: \bloge:\Vue_store\manager-fe\src\api\index.js
@@ -45,7 +45,7 @@ export default {
       method: 'post',
       url: '/users/delete',
       data: params,
-      mock: true
+      mock: false
     })
   },
   getRoleList() {
@@ -69,7 +69,7 @@ export default {
       method: 'post',
       url: '/users/operate',
       data: params,
-      mock: true
+      mock: false
     })
   }
 }

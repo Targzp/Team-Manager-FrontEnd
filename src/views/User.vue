@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-21 21:08:11
- * @LastEditTime: 2021-08-23 22:39:48
+ * @LastEditTime: 2021-08-24 22:14:25
  * @LastEditors: Please set LastEditors
  * @Description: 用户管理页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\views\User.vue
@@ -155,7 +155,7 @@ import utils from "../utils/utils";
 import { ElMessage } from "element-plus";
 // 初始化用户表单对象数据
 const user = reactive({
-  state: 0,
+  state: 1,
 });
 // 初始化用户列表数据
 const userList = ref([]);
@@ -175,7 +175,7 @@ const roleList = ref([]);
 // 所有部门列表
 const deptList = ref([]);
 // 定义用户操作行为
-const action = ref("");
+const action = ref("add");
 // 定义表单校验规则
 const rules = reactive({
   userName: [
@@ -393,8 +393,8 @@ const getRoleList = async () => {
  * @description: 用户弹窗关闭
  */
 const handleClose = () => {
-  action.value = "";
   showModel.value = false;
+  action.value = "add";
   handleReset(dialogForm.value);
 };
 
@@ -409,7 +409,7 @@ const handleSubmit = () => {
       const res = await api.userSubmit(params);
       if (res) {
         ElMessage({
-          message: action.value == "edit" ? "编辑成功" : "用户创建成功",
+          message: action.value == "edit" ? "更新成功" : "用户创建成功",
           duration: 2000,
           type: "success",
         });
