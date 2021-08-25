@@ -1,25 +1,28 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:12:02
- * @LastEditTime: 2021-08-21 21:14:58
+ * @LastEditTime: 2021-08-25 14:57:58
  * @LastEditors: Please set LastEditors
  * @Description: 前端路由配置
  * @FilePath: \bloge:\Vue_store\manager-fe\src\router\index.js
  */
-import { createRouter, createWebHashHistory } from 'vue-router'
+import {
+  createRouter,
+  createWebHashHistory
+} from 'vue-router'
 import Home from '@/components/Home.vue'
 
-const routes = [
-  {
+const routes = [{
     name: 'Home',
     path: '/',
     meta: {
       title: '首页'
     },
     component: Home,
-    redirect: {name: 'Welcome'},
-    children: [
-      {
+    redirect: {
+      name: 'Welcome'
+    },
+    children: [{
         name: 'Welcome',
         path: 'welcome',
         meta: {
@@ -29,11 +32,19 @@ const routes = [
       },
       {
         name: 'User',
-        path: 'user',
+        path: 'system/user',
         meta: {
           title: '用户管理'
         },
         component: () => import('@/views/User.vue'),
+      },
+      {
+        name: 'Menu',
+        path: 'system/menu',
+        meta: {
+          title: '菜单管理'
+        },
+        component: () => import('@/views/Menu.vue'),
       }
     ]
   },

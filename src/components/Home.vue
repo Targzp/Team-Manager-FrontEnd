@@ -1,17 +1,17 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-15 15:53:55
- * @LastEditTime: 2021-08-21 22:29:49
+ * @LastEditTime: 2021-08-25 20:29:56
  * @LastEditors: Please set LastEditors
  * @Description: 首页
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Home.vue
 -->
 <template>
   <div class="basic-layout">
-    <div :class="['nav-side',isCollapse?'fold':'unfold']">
+    <div :class="['nav-side', isCollapse ? 'fold' : 'unfold']">
       <!-- 系统 logo -->
       <div class="logo">
-        <img src="../assets/images/logo.png" alt="">
+        <img src="../assets/images/logo.png" alt="" />
         <span>WorkTile</span>
       </div>
       <!-- 导航菜单 -->
@@ -21,14 +21,17 @@
         :collapse="isCollapse"
         router
         :default-active="activeMenu"
-        class="nav-menu">
-        <tree-menu :userMenu="userMenu"/>
+        class="nav-menu"
+      >
+        <tree-menu :userMenu="userMenu" />
       </el-menu>
     </div>
-    <div :class="['content-right', isCollapse?'fold':'unfold']">
+    <div :class="['content-right', isCollapse ? 'fold' : 'unfold']">
       <div class="nav-top">
         <div class="nav-left">
-          <div class="menu-fold" @click="toggle"><i class="el-icon-s-fold"></i></div>
+          <div class="menu-fold" @click="toggle">
+            <i class="el-icon-s-fold"></i>
+          </div>
           <div class="bread">
             <bread-crumb />
           </div>
@@ -39,11 +42,13 @@
           </el-badge>
           <el-dropdown @command="handleLogOut">
             <span class="user-link">
-              {{userInfo.userName}}
+              {{ userInfo.userName }}
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item cpmmand="email">{{userInfo.userEmail}}</el-dropdown-item>
+                <el-dropdown-item cpmmand="email">{{
+                  userInfo.userEmail
+                }}</el-dropdown-item>
                 <el-dropdown-item command="logout">退出</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -58,67 +63,67 @@
 </template>
 
 <script>
-import TreeMenu from './TreeMenu.vue'
-import BreadCrumb from './BreadCrumb.vue'
+import TreeMenu from "./TreeMenu.vue";
+import BreadCrumb from "./BreadCrumb.vue";
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     TreeMenu,
-    BreadCrumb
+    BreadCrumb,
   },
-  data () {
+  data() {
     return {
       isCollapse: false,
       userInfo: this.$store.state.userInfo,
       noticeCount: 0,
       userMenu: [],
-      activeMenu: location.hash.slice(1)
-    }
+      activeMenu: location.hash.slice(1),
+    };
   },
-  mounted () {
-    this.getNoticeCount()
-    this.getMenuList()
+  mounted() {
+    this.getNoticeCount();
+    this.getMenuList();
   },
   methods: {
     /**
      * @description: 控制菜单栏缩放
-     */    
-    toggle () {
-      this.isCollapse = !this.isCollapse
+     */
+    toggle() {
+      this.isCollapse = !this.isCollapse;
     },
     /**
      * @description: 控制退出登录
-     */    
-    handleLogOut (key) {
+     */
+    handleLogOut(key) {
       if (key === "email") return;
-      this.$store.commit('saveUserInfo', '')
-      this.userInfo = null
-      this.$router.push('/login')
+      this.$store.commit("saveUserInfo", "");
+      this.userInfo = null;
+      this.$router.push("/login");
     },
     /**
      * @description: 获取通知消息数量
-     */    
-    async getNoticeCount () {
+     */
+    async getNoticeCount() {
       try {
-        const count = await this.$api.noticeCount()
-        this.noticeCount = count
+        const count = await this.$api.noticeCount();
+        this.noticeCount = count;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
     /**
      * @description: 获取菜单列表
-     */    
-    async getMenuList () {
+     */
+    async getMenuList() {
       try {
-        const list = await this.$api.getMenuList()
-        this.userMenu = list
+        const list = await this.$api.getMenuList();
+        this.userMenu = list;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -129,10 +134,10 @@ export default {
     width: 200px;
     height: 100vh;
     background-color: #001529;
-    color: #FFF;
+    color: #fff;
     overflow-y: auto;
     overflow-x: hidden;
-    transition: width .5s;
+    transition: width 0.3s;
     .logo {
       display: flex;
       align-items: center;
@@ -160,7 +165,7 @@ export default {
   }
   .content-right {
     min-width: 955px;
-    transition: .5s margin-left;
+    transition: 0.3s margin-left;
     margin-left: 200px;
     /* 合并 */
     &.fold {

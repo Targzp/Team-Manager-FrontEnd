@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:11:23
- * @LastEditTime: 2021-08-24 16:13:08
+ * @LastEditTime: 2021-08-25 21:26:41
  * @LastEditors: Please set LastEditors
  * @Description: api 管理
  * @FilePath: \bloge:\Vue_store\manager-fe\src\api\index.js
@@ -24,11 +24,11 @@ export default {
       mock: true
     })
   },
-  getMenuList() {
+  getMenuList(params) {
     return request({
       method: 'get',
       url: '/menu/list',
-      data: {},
+      data: params,
       mock: true
     })
   },
@@ -70,6 +70,14 @@ export default {
       url: '/users/operate',
       data: params,
       mock: false
+    })
+  },
+  menuSubmit(params) {
+    return request({
+      method: 'post',
+      url: '/menu/operate',
+      data: params,
+      mock: true
     })
   }
 }
