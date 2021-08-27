@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-25 14:52:11
- * @LastEditTime: 2021-08-25 23:22:22
+ * @LastEditTime: 2021-08-26 21:57:34
  * @LastEditors: Please set LastEditors
  * @Description: 菜单管理页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\views\Menu.vue
@@ -161,6 +161,7 @@ export default {
       },
       menuList: [],
       menuForm: {
+        parentId: [null],
         menuType: 1,
         menuState: 1,
       },
@@ -276,13 +277,12 @@ export default {
       });
     },
     async handleDelete(row) {
-      const id = row._id;
+      const _id = row._id;
       try {
-        await this.$api.menuSubmit({ id, action: "delete" });
+        await this.$api.menuSubmit({ _id, action: "delete" });
         this.$message.success("删除成功");
         this.getMenuList();
       } catch (error) {
-        this.$message.fail("删除失败");
         throw new Error(error);
       }
     },

@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-15 15:53:55
- * @LastEditTime: 2021-08-25 20:29:56
+ * @LastEditTime: 2021-08-27 16:00:24
  * @LastEditors: Please set LastEditors
  * @Description: 首页
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Home.vue
@@ -116,7 +116,7 @@ export default {
      */
     async getMenuList() {
       try {
-        const list = await this.$api.getMenuList();
+        const list = await this.$api.getMenuList({ menuState: 1 });
         this.userMenu = list;
       } catch (error) {
         console.log(error);

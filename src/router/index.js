@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:12:02
- * @LastEditTime: 2021-08-25 14:57:58
+ * @LastEditTime: 2021-08-27 16:31:52
  * @LastEditors: Please set LastEditors
  * @Description: 前端路由配置
  * @FilePath: \bloge:\Vue_store\manager-fe\src\router\index.js
@@ -45,6 +45,14 @@ const routes = [{
           title: '菜单管理'
         },
         component: () => import('@/views/Menu.vue'),
+      },
+      {
+        name: 'Role',
+        path: 'system/role',
+        meta: {
+          title: '角色管理'
+        },
+        component: () => import('@/views/Role.vue'),
       }
     ]
   },

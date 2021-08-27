@@ -276,7 +276,7 @@ const columns = reactive([
 onMounted(() => {
   getUserList();
   getDeptList();
-  getRoleList();
+  getRoleNameList();
 });
 /**
  * @description: 获取用户列表
@@ -384,8 +384,8 @@ const getDeptList = async () => {
 /**
  * @description: 获取角色列表
  */
-const getRoleList = async () => {
-  let list = await api.getRoleList();
+const getRoleNameList = async () => {
+  let list = await api.getRoleNameList();
   roleList.value = list;
 };
 
