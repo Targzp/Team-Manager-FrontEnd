@@ -168,9 +168,7 @@ export default {
             let names = [];
             let list = value.halfCheckedKeys || [];
             list.map((key) => {
-              if (key) {
-                names.push(this.actionMap[key]);
-              }
+              if (this.actionMap[key]) names.push(this.actionMap[key]);
             });
             return names.join(",");
           },
