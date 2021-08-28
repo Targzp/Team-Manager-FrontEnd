@@ -31,7 +31,12 @@
             <el-button size="mini" plain @click="handleEdit(scope.row)"
               >编辑</el-button
             >
-            <el-button size="mini" type="primary">设置权限</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handlePermission(scope.row)"
+              >设置权限</el-button
+            >
             <el-button
               type="danger"
               size="mini"
@@ -82,6 +87,40 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 权限弹框 -->
+    <el-dialog
+      title="设置权限"
+      v-model="showPermission"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :center="true"
+    >
+      <el-form label-width="100px">
+        <el-form-item label="角色名称">
+          {{ curRoleName }}
+        </el-form-item>
+        <el-form-item label="选择权限">
+          <el-tree
+            ref="permissionTree"
+            :data="menuList"
+            show-checkbox
+            node-key="_id"
+            default-expand-all
+            :props="{ label: 'menuName' }"
+          >
+          </el-tree>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="this.showPermission = false">取 消</el-button>
+          <el-button type="primary" @click="handlePermissionSubmit"
+            >确 定</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -97,6 +136,13 @@ export default {
         remark: "",
       },
       showModel: false,
+      // 权限弹窗展示
+      showPermission: false,
+      curRoleId: "",
+      curRoleName: "",
+      menuList: [],
+      // 菜单映射表
+      actionMap: {},
       action: "",
       pager: {
         pageNum: 1,
@@ -116,8 +162,18 @@ export default {
         },
         {
           label: "权限列表",
-          prop: "menuType",
+          prop: "permissionList",
           align: "center",
+          formatter: (row, column, value) => {
+            let names = [];
+            let list = value.halfCheckedKeys || [];
+            list.map((key) => {
+              if (key) {
+                names.push(this.actionMap[key]);
+              }
+            });
+            return names.join(",");
+          },
         },
         {
           label: "创建时间",
@@ -142,6 +198,7 @@ export default {
   },
   mounted() {
     this.getRoleList();
+    this.getMenuList();
   },
   methods: {
     /**
@@ -155,6 +212,33 @@ export default {
       } catch (error) {
         throw new Error(error);
       }
+    },
+    /**
+     * @description: 获取菜单列表
+     */
+    async getMenuList() {
+      try {
+        const list = await this.$api.getMenuList();
+        this.menuList = list;
+        this.getActionMap(list);
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    getActionMap(list) {
+      let actionMap = {};
+      const deep = (arr) => {
+        arr.map((item) => {
+          if (item.children && item.action) {
+            actionMap[item._id] = item.menuName;
+          }
+          if (item.children && !item.action) {
+            deep(item.children);
+          }
+        });
+      };
+      deep(list);
+      this.actionMap = actionMap;
     },
     /**
      * @description: 角色查询
@@ -228,6 +312,55 @@ export default {
           }
         }
       });
+    },
+    /**
+     * @description: 设置权限表单开启
+     * @param {Object} row
+     */
+    handlePermission(row) {
+      this.showPermission = true;
+      this.$nextTick(() => {
+        // 表单渲染完毕后再进行操作
+        this.curRoleName = row.roleName;
+        this.curRoleId = row._id;
+        let { checkedKeys } = row.permissionList;
+        this.$refs.permissionTree.setCheckedKeys(checkedKeys); // 通过 keys 设置目前勾选的节点，使用此方法必须设置 node-key 属性
+      });
+    },
+    /**
+     * @description: 角色权限设置提交
+     */
+    async handlePermissionSubmit() {
+      let nodes = this.$refs.permissionTree.getCheckedNodes(); // 返回目前被选中的节点所组成的数组
+      let halfKeys = this.$refs.permissionTree.getHalfCheckedKeys(); // 返回目前半选中的节点所组成的数组
+      let checkedKeys = [];
+      let parentKeys = [];
+      nodes.map((node) => {
+        if (!node.children) {
+          checkedKeys.push(node._id);
+        } else {
+          /* 假如菜单下所有选项都被选中，那么菜单项也会被选中，而不是半选中。
+             但是如果未来菜单下又新增了选项，那么根据 checkedKeys 来选中选项则会把菜单
+             弄成选中状态，底下所有选项都会被选中，包括新增的本来该角色没有的选中的选项。
+             所以这边我们应该撇去 */
+          parentKeys.push(node._id);
+        }
+      });
+      let params = {
+        _id: this.curRoleId,
+        permissionList: {
+          checkedKeys,
+          halfCheckedKeys: parentKeys.concat(halfKeys),
+        },
+      };
+      try {
+        await this.$api.updatePermission(params);
+        this.showPermission = false;
+        this.$message.success("设置成功");
+        this.getRoleList();
+      } catch (error) {
+        throw new Error(error);
+      }
     },
   },
 };
