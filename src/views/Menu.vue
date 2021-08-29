@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-25 14:52:11
- * @LastEditTime: 2021-08-25 23:22:22
+ * @LastEditTime: 2021-08-29 21:47:45
  * @LastEditors: Please set LastEditors
  * @Description: 菜单管理页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\views\Menu.vue
@@ -51,11 +51,12 @@
           :formatter="item.formatter"
         >
         </el-table-column>
-        <el-table-column label="操作" width="250">
+        <el-table-column label="操作" width="250" align="center">
           <template #default="scope">
             <el-button
               size="mini"
               type="primary"
+              v-if="scope.row.menuType === 1"
               @click="handleAdd((addType = 2), scope.row)"
               >新增</el-button
             >
