@@ -51,6 +51,7 @@
         layout="prev, pager, next"
         :total="pager.total"
         :page-size="pager.pageSize"
+        @current-change="handleCurrentChange"
       >
       </el-pagination>
     </div>
@@ -204,7 +205,8 @@ export default {
      */
     async getRoleList() {
       try {
-        const { list, page } = await this.$api.getRoleList(this.queryForm);
+        let params = { ...this.queryForm, ...this.pager };
+        const { list, page } = await this.$api.getRoleList(params);
         this.roleList = list;
         this.pager.total = page.total;
       } catch (error) {
@@ -223,6 +225,10 @@ export default {
         throw new Error(error);
       }
     },
+    /**
+     * @description: 获取二级菜单（拥有按钮）
+     * @param {Array} list
+     */
     getActionMap(list) {
       let actionMap = {};
       const deep = (arr) => {
@@ -237,6 +243,13 @@ export default {
       };
       deep(list);
       this.actionMap = actionMap;
+    },
+    /**
+     * @description: 分页事件处理
+     */
+    handleCurrentChange(current) {
+      this.pager.pageNum = current;
+      this.getRoleList();
     },
     /**
      * @description: 角色查询

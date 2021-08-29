@@ -36,12 +36,12 @@
     .title {
       font-size: 40px;
       line-height: 62px;
-      color: #409eff
+      color: #409eff;
     }
   }
   .img {
     margin-left: 105px;
-    background-image: url('../assets/images/welcome.png');
+    background-image: url("../assets/images/welcome.png");
     width: 371px;
     height: 438px;
   }

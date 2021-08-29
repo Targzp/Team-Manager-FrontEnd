@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:11:23
- * @LastEditTime: 2021-08-27 21:18:55
+ * @LastEditTime: 2021-08-29 17:07:41
  * @LastEditors: Please set LastEditors
  * @Description: api 管理
  * @FilePath: \bloge:\Vue_store\manager-fe\src\api\index.js
@@ -53,15 +53,15 @@ export default {
       method: 'get',
       url: '/roles/allList',
       data: {},
-      mock: true
+      mock: false
     })
   },
-  getRoleList() {
+  getRoleList(params) {
     return request({
       method: 'get',
-      url: '/roles/List',
-      data: {},
-      mock: true
+      url: '/roles/list',
+      data: params,
+      mock: false
     })
   },
   getDeptList() {
@@ -93,7 +93,7 @@ export default {
       method: 'post',
       url: '/roles/operate',
       data: params,
-      mock: true
+      mock: false
     })
   },
   updatePermission(params) {
@@ -101,7 +101,7 @@ export default {
       method: 'post',
       url: '/roles/update/permission',
       data: params,
-      mock: true
+      mock: false
     })
   }
 }
