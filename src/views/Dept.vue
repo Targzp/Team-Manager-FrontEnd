@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-25 14:52:11
- * @LastEditTime: 2021-08-30 23:30:38
+ * @LastEditTime: 2021-08-31 17:13:30
  * @LastEditors: Please set LastEditors
  * @Description: 部门管理页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\views\Menu.vue
@@ -15,7 +15,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">查询</el-button>
-          <el-button @click="() => handleReset(validateForm)">重置</el-button>
+          <el-button @click="() => handleReset('validateForm')">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -73,7 +73,7 @@
           <el-cascader
             v-model="deptForm.parentId"
             placeholder="请选择上级部门"
-            :options="deptList"
+            :options="allDeptList"
             :props="{ checkStrictly: true, value: '_id', label: 'deptName' }"
             clearable
           ></el-cascader>
@@ -114,11 +114,12 @@ export default {
   name: "dept",
   data() {
     return {
-      queryForm: {
-        deptName: "",
-      },
+      queryForm: {},
       deptList: [],
-      deptForm: {},
+      allDeptList: [],
+      deptForm: {
+        parentId: [null],
+      },
       userList: [],
       showModel: false,
       action: "",
@@ -136,20 +137,19 @@ export default {
         {
           label: "更新时间",
           prop: "updateTime",
+          formatter: (row, column, value) => {
+            return this.$utils.formateDate(new Date(value));
+          },
         },
         {
           label: "创建时间",
           prop: "createTime",
+          formatter: (row, column, value) => {
+            return this.$utils.formateDate(new Date(value));
+          },
         },
       ],
       rules: {
-        parentId: [
-          {
-            required: true,
-            message: "请选择上级部门",
-            trigger: "blur",
-          },
-        ],
         deptName: [
           {
             required: true,
@@ -178,8 +178,14 @@ export default {
     async getDeptList() {
       try {
         let params = { ...this.queryForm };
-        const list = await this.$api.getDeptList(params);
-        this.deptList = list;
+        let list = null;
+        let allList = null;
+        if (params.deptName) {
+          list = await this.$api.getDeptList(params);
+        }
+        allList = await this.$api.getDeptList();
+        this.allDeptList = allList;
+        this.deptList = list || allList;
       } catch (error) {
         throw new Error(error);
       }
@@ -208,7 +214,6 @@ export default {
      */
     handleReset(form) {
       this.$refs[form].resetFields();
-      this.deptForm.parentId = null;
     },
     /**
      * @description: 获取对应用户信息添加到表单对象中
@@ -233,8 +238,9 @@ export default {
       this.showModel = true;
       this.action = "edit";
       this.$nextTick(() => {
-        const { parentId, deptName, userId, userName, userEmail } = row;
+        const { _id, parentId, deptName, userId, userName, userEmail } = row;
         this.deptForm = {
+          _id,
           parentId,
           deptName,
           user: `${userId}/${userName}/${userEmail}`,
