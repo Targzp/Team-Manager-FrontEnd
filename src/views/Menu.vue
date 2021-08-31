@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-25 14:52:11
- * @LastEditTime: 2021-08-29 21:50:20
+ * @LastEditTime: 2021-08-31 22:20:48
  * @LastEditors: Please set LastEditors
  * @Description: 菜单管理页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\views\Menu.vue
@@ -25,7 +25,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">查询</el-button>
-          <el-button @click="() => handleReset(validateForm)">重置</el-button>
+          <el-button @click="() => handleReset('validateForm')">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -92,7 +92,7 @@
             v-model="menuForm.parentId"
             placeholder="请选择父级菜单"
             :disabled="addType === 2"
-            :options="menuList"
+            :options="allMenuList"
             :props="{ checkStrictly: true, value: '_id', label: 'menuName' }"
             clearable
           ></el-cascader>
@@ -161,6 +161,7 @@ export default {
         menuState: 1,
       },
       menuList: [],
+      allMenuList: [],
       menuForm: {
         parentId: [null],
         menuType: 1,
@@ -240,8 +241,15 @@ export default {
      */
     async getMenuList() {
       try {
-        const list = await this.$api.getMenuList(this.queryForm);
-        this.menuList = list;
+        let params = { ...this.queryForm };
+        let list = null;
+        let allList = null;
+        if (params.menuName || params.menuState) {
+          list = await this.$api.getMenuList(params);
+        }
+        allList = await this.$api.getMenuList();
+        this.allMenuList = allList;
+        this.menuList = list || allList;
       } catch (error) {
         throw new Error(error);
       }
