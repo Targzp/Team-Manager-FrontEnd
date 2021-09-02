@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-25 14:52:11
- * @LastEditTime: 2021-08-31 22:20:48
+ * @LastEditTime: 2021-09-02 16:35:11
  * @LastEditors: Please set LastEditors
  * @Description: 菜单管理页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\views\Menu.vue
@@ -31,7 +31,10 @@
     </div>
     <div class="base-table">
       <div class="action">
-        <el-button type="primary" @click="() => handleAdd(addType)"
+        <el-button
+          type="primary"
+          @click="() => handleAdd(addType)"
+          v-has="'menu-create'"
           >创建</el-button
         >
       </div>
@@ -58,15 +61,21 @@
               type="primary"
               v-if="scope.row.menuType === 1"
               @click="handleAdd((addType = 2), scope.row)"
+              v-has="'menu-create'"
               >新增</el-button
             >
-            <el-button size="mini" plain @click="handleEdit(scope.row)"
+            <el-button
+              size="mini"
+              plain
+              @click="handleEdit(scope.row)"
+              v-has="'menu-edit'"
               >编辑</el-button
             >
             <el-button
               type="danger"
               size="mini"
               @click="handleDelete(scope.row)"
+              v-has="'menu-delete'"
               >删除</el-button
             >
           </template>
@@ -247,7 +256,7 @@ export default {
         if (params.menuName || params.menuState) {
           list = await this.$api.getMenuList(params);
         }
-        allList = await this.$api.getMenuList();
+        allList = await this.$api.getMenuList({ menuState: 1 });
         this.allMenuList = allList;
         this.menuList = list || allList;
       } catch (error) {

@@ -48,6 +48,14 @@ export default {
       mock: false
     })
   },
+  getPermissionList() {
+    return request({
+      method: 'get',
+      url: '/users/getPermissionList',
+      data: {},
+      mock: false
+    })
+  },
   userDel(params) {
     return request({
       method: 'post',

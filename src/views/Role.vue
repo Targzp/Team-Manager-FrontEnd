@@ -13,7 +13,9 @@
     </div>
     <div class="base-table">
       <div class="action">
-        <el-button type="primary" @click="handleAdd">创建</el-button>
+        <el-button type="primary" @click="handleAdd" v-has="'role-create'"
+          >创建</el-button
+        >
       </div>
       <el-table max-height="350" :data="roleList">
         <el-table-column
@@ -28,19 +30,25 @@
         </el-table-column>
         <el-table-column label="操作" width="250" align="center">
           <template #default="scope">
-            <el-button size="mini" plain @click="handleEdit(scope.row)"
+            <el-button
+              size="mini"
+              plain
+              @click="handleEdit(scope.row)"
+              v-has="'role-edit'"
               >编辑</el-button
             >
             <el-button
               size="mini"
               type="primary"
               @click="handlePermission(scope.row)"
+              v-has="'role-setting'"
               >设置权限</el-button
             >
             <el-button
               type="danger"
               size="mini"
               @click="handleDelete(scope.row)"
+              v-has="'role-delete'"
               >删除</el-button
             >
           </template>
@@ -218,7 +226,7 @@ export default {
      */
     async getMenuList() {
       try {
-        const list = await this.$api.getMenuList();
+        const list = await this.$api.getMenuList({ menuState: 1 });
         this.menuList = list;
         this.getActionMap(list);
       } catch (error) {

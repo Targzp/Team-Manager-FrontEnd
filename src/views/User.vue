@@ -32,8 +32,15 @@
     </div>
     <div class="base-table">
       <div class="action">
-        <el-button type="primary" @click="handleCreate">新增</el-button>
-        <el-button type="danger" @click="handlePatchDel">批量删除</el-button>
+        <el-button type="primary" @click="handleCreate" v-has="'user-create'"
+          >新增</el-button
+        >
+        <el-button
+          type="danger"
+          @click="handlePatchDel"
+          v-has="'user-patch-delete'"
+          >批量删除</el-button
+        >
       </div>
       <el-table
         max-height="350"
@@ -52,13 +59,18 @@
         </el-table-column>
         <el-table-column label="操作" width="150">
           <template #default="scope">
-            <el-button size="mini" plain @click="handleEdit(scope.row)"
+            <el-button
+              size="mini"
+              plain
+              @click="handleEdit(scope.row)"
+              v-has="'user-edit'"
               >编辑</el-button
             >
             <el-button
               type="danger"
               size="mini"
               @click="handleDelete(scope.row)"
+              v-has="'user-delete'"
               >删除</el-button
             >
           </template>

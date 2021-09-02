@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:12:02
- * @LastEditTime: 2021-08-30 16:55:51
+ * @LastEditTime: 2021-09-02 22:32:38
  * @LastEditors: Please set LastEditors
  * @Description: 前端路由配置
  * @FilePath: \bloge:\Vue_store\manager-fe\src\router\index.js
@@ -11,6 +11,7 @@ import {
   createWebHashHistory
 } from 'vue-router'
 import Home from '@/components/Home.vue'
+import storage from '../utils/storage'
 
 const routes = [{
     name: 'Home',
@@ -26,7 +27,7 @@ const routes = [{
         name: 'Welcome',
         path: 'welcome',
         meta: {
-          title: '欢迎使用 WorkTile'
+          title: '欢迎使用'
         },
         component: () => import('@/views/Welcome.vue')
       },
@@ -71,12 +72,38 @@ const routes = [{
       title: '登录'
     },
     component: () => import('@/views/Login.vue')
+  },
+  {
+    name: '404',
+    path: '/404',
+    meta: {
+      title: '页面不存在'
+    },
+    component: () => import('@/views/404.vue')
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+/**
+ * @description: 判断当前地址是否可以访问
+ * @param {String} path
+ */
+function checkPermission(path) {
+  return router.getRoutes().some(route => route.path === path)
+}
+
+// 导航守卫
+router.beforeEach((to, from, next) => {
+  if (checkPermission(to.path)) {
+    document.title = to.meta.title
+    next()
+  } else {
+    next('/404')
+  }
 })
 
 export default router

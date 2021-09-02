@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-25 14:52:11
- * @LastEditTime: 2021-08-31 17:13:30
+ * @LastEditTime: 2021-09-02 17:08:27
  * @LastEditors: Please set LastEditors
  * @Description: 部门管理页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\views\Menu.vue
@@ -21,7 +21,9 @@
     </div>
     <div class="base-table">
       <div class="action">
-        <el-button type="primary" @click="handleAdd">创建</el-button>
+        <el-button type="primary" @click="handleAdd" v-has="'dept-create'"
+          >创建</el-button
+        >
       </div>
       <el-table
         max-height="350"
@@ -42,13 +44,18 @@
         </el-table-column>
         <el-table-column label="操作" width="250" align="center">
           <template #default="scope">
-            <el-button size="mini" plain @click="handleEdit(scope.row)"
+            <el-button
+              size="mini"
+              plain
+              @click="handleEdit(scope.row)"
+              v-has="'dept-edit'"
               >编辑</el-button
             >
             <el-button
               type="danger"
               size="mini"
               @click="handleDelete(scope.row)"
+              v-has="'dept-delete'"
               >删除</el-button
             >
           </template>
@@ -196,7 +203,6 @@ export default {
     async getAllUserList() {
       try {
         const list = await this.$api.getAllUserList();
-        console.log(list);
         this.userList = list;
       } catch (error) {
         throw new Error(error);

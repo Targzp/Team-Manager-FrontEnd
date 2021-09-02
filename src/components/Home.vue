@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-15 15:53:55
- * @LastEditTime: 2021-08-30 21:02:55
+ * @LastEditTime: 2021-09-02 22:09:03
  * @LastEditors: Please set LastEditors
  * @Description: 首页
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Home.vue
@@ -56,7 +56,9 @@
         </div>
       </div>
       <div class="wrapper">
-        <router-view></router-view>
+        <transition name="m" appear>
+          <router-view></router-view>
+        </transition>
       </div>
     </div>
   </div>
@@ -97,7 +99,7 @@ export default {
     handleLogOut(key) {
       if (key === "email") return;
       this.$store.commit("saveUserInfo", "");
-      this.userInfo = null;
+      this.userInfo = {};
       this.$router.push("/login");
     },
     /**
@@ -116,8 +118,10 @@ export default {
      */
     async getMenuList() {
       try {
-        const list = await this.$api.getMenuList({ menuState: 1 });
-        this.userMenu = list;
+        const { menuList, actionList } = await this.$api.getPermissionList();
+        this.userMenu = menuList;
+        this.$store.commit("saveUserMenuList", menuList);
+        this.$store.commit("saveUserActionList", actionList);
       } catch (error) {
         console.log(error);
       }
@@ -127,6 +131,19 @@ export default {
 </script>
 
 <style lang="scss">
+.m-enter-active {
+  transition: all 0.5s ease-out;
+}
+
+.m-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.m-enter-from {
+  transform: translateY(50px);
+  opacity: 0;
+}
+
 .basic-layout {
   position: relative;
   .nav-side {
