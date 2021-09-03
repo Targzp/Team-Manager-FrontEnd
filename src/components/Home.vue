@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-15 15:53:55
- * @LastEditTime: 2021-09-02 22:09:03
+ * @LastEditTime: 2021-09-03 22:08:50
  * @LastEditors: Please set LastEditors
  * @Description: 首页
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Home.vue
@@ -56,9 +56,14 @@
         </div>
       </div>
       <div class="wrapper">
-        <transition name="m" appear>
+        <!-- <transition name="main" appear>
           <router-view></router-view>
-        </transition>
+        </transition> -->
+        <router-view v-slot="{ Component }">
+          <transition name="main" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </div>
     </div>
   </div>
@@ -67,6 +72,7 @@
 <script>
 import TreeMenu from "./TreeMenu.vue";
 import BreadCrumb from "./BreadCrumb.vue";
+import Welcome from "../views/Welcome.vue";
 export default {
   name: "Home",
   components: {
@@ -100,6 +106,24 @@ export default {
       if (key === "email") return;
       this.$store.commit("saveUserInfo", "");
       this.userInfo = {};
+      this.$router.addRoute({
+        name: "Home",
+        path: "/",
+        component: () => import("@/components/Home.vue"),
+        redirect: {
+          name: "Welcome",
+        },
+        children: [
+          {
+            name: "Welcome",
+            path: "welcome",
+            meta: {
+              title: "欢迎使用",
+            },
+            component: () => import("@/views/Welcome.vue"),
+          },
+        ],
+      });
       this.$router.push("/login");
     },
     /**
@@ -131,15 +155,16 @@ export default {
 </script>
 
 <style lang="scss">
-.m-enter-active {
-  transition: all 0.5s ease-out;
+.main-enter-active {
+  transition: all 0.8s ease-out;
 }
 
-.m-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+.main-leave-active {
+  transition: all 0.4s ease-in;
 }
 
-.m-enter-from {
+.main-enter-from,
+.main-leave-to {
   transform: translateY(50px);
   opacity: 0;
 }

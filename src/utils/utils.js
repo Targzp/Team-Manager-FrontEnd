@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-23 22:10:49
- * @LastEditTime: 2021-08-23 23:17:02
+ * @LastEditTime: 2021-09-03 15:58:38
  * @LastEditors: Please set LastEditors
  * @Description: 工具函数封装
  * @FilePath: \bloge:\Vue_store\manager-fe\src\utils\utils.js
@@ -32,5 +32,27 @@ export default {
             }
         }
         return fmt
+    },
+    generateRoute(list) {
+        let routes = []
+        const deep = (list) => {
+            list.map(item => {
+                if (item.action) {
+                    routes.push({
+                        name: item.component,
+                        path: item.path,
+                        meta: {
+                            title: item.menuName
+                        },
+                        component: item.component
+                    })
+                }
+                if (item.children && !item.action) {
+                    deep(item.children)
+                }
+            })
+        }
+        deep(list)
+        return routes
     }
 }

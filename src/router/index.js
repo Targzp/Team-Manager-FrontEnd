@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:12:02
- * @LastEditTime: 2021-09-02 22:32:38
+ * @LastEditTime: 2021-09-03 21:36:13
  * @LastEditors: Please set LastEditors
  * @Description: 前端路由配置
  * @FilePath: \bloge:\Vue_store\manager-fe\src\router\index.js
@@ -12,6 +12,10 @@ import {
 } from 'vue-router'
 import Home from '@/components/Home.vue'
 import storage from '../utils/storage'
+import api from '../api/index'
+import utils from '../utils/utils'
+const modules =
+  import.meta.glob('../views/*.vue')
 
 const routes = [{
     name: 'Home',
@@ -31,7 +35,7 @@ const routes = [{
         },
         component: () => import('@/views/Welcome.vue')
       },
-      {
+      /* {
         name: 'User',
         path: 'system/user',
         meta: {
@@ -62,7 +66,7 @@ const routes = [{
           title: '部门管理'
         },
         component: () => import('@/views/Dept.vue'),
-      }
+      } */
     ]
   },
   {
@@ -88,17 +92,30 @@ const router = createRouter({
   routes
 })
 
-/**
- * @description: 判断当前地址是否可以访问
- * @param {String} path
- */
-function checkPermission(path) {
-  return router.getRoutes().some(route => route.path === path)
+async function loadAsyncRoutes() {
+  const userInfo = storage.getItem('userInfo') || {}
+  if (userInfo.token) {
+    try {
+      const {
+        menuList
+      } = await api.getPermissionList()
+      let routes = utils.generateRoute(menuList)
+      routes.map(route => {
+        let url = `../views/${route.component}.vue`
+        route.component = modules[url]
+        router.addRoute("Home", route)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
+
+await loadAsyncRoutes()
 
 // 导航守卫
 router.beforeEach((to, from, next) => {
-  if (checkPermission(to.path)) {
+  if (router.hasRoute(to.name)) {
     document.title = to.meta.title
     next()
   } else {
