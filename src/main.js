@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-16 22:00:56
- * @LastEditTime: 2021-09-02 16:52:53
+ * @LastEditTime: 2021-09-04 22:48:08
  * @Description: 入口文件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\main.js
  */
@@ -45,5 +45,5 @@ app.directive('has', {
 
 app.use(router).use(store).use(ElementPlus, {
     size: 'small',
-    zIndex: 3000
+    zIndex: 3000,
 }).mount('#app')
