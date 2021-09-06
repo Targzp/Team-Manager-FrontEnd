@@ -135,5 +135,13 @@ export default {
       data: params,
       mock: true
     })
+  },
+  applySubmit(params) {
+    return request({
+      method: 'post',
+      url: '/leave/operate',
+      data: params,
+      mock: true
+    })
   }
 }

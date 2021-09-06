@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-21 21:08:11
- * @LastEditTime: 2021-09-04 22:51:01
+ * @LastEditTime: 2021-09-06 23:21:16
  * @LastEditors: Please set LastEditors
  * @Description: 休假申请页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\views\User.vue
@@ -50,8 +50,16 @@
         </el-table-column>
         <el-table-column label="操作" width="150">
           <template #default="scope">
-            <el-button size="mini" plain>查看</el-button>
-            <el-button type="danger" size="mini">作废</el-button>
+            <el-button size="mini" plain @click="handleDetail(scope.row)"
+              >查看</el-button
+            >
+            <el-button
+              type="danger"
+              size="mini"
+              @click="handleDelete(scope.row._id)"
+              v-if="scope.row.applyState > 2 ? false : true"
+              >作废</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -64,9 +72,9 @@
       >
       </el-pagination>
     </div>
-    <!-- 申请表单 -->
+    <!-- 休假申请表单 -->
     <el-dialog
-      :title="休假申请"
+      title="休假申请"
       v-model="showModel"
       :close-on-click-modal="false"
       :show-close="false"
@@ -81,14 +89,13 @@
         :rules="rules"
       >
         <el-form-item label="休假类型" prop="applyType">
-          <el-select v-model="applyForm.applyType">
-            <el-option value="" label="请选择" disabled></el-option>
+          <el-select v-model="applyForm.applyType" placeholder="请选择休假类型">
             <el-option :value="1" label="事假"></el-option>
             <el-option :value="2" label="调休"></el-option>
             <el-option :value="3" label="年假"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="休假时间">
+        <el-form-item label="休假时间" required>
           <el-row>
             <el-col :span="10">
               <el-form-item prop="startTime" style="margin-bottom: 0px">
@@ -97,6 +104,7 @@
                     v-model="applyForm.startTime"
                     type="date"
                     placeholder="选择开始日期"
+                    @change="() => handleDateChange('startTime')"
                   />
                 </el-config-provider>
               </el-form-item>
@@ -109,13 +117,14 @@
                     v-model="applyForm.endTime"
                     type="date"
                     placeholder="选择结束日期"
+                    @change="() => handleDateChange('endTime')"
                   />
                 </el-config-provider>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="休假时长"> 0天 </el-form-item>
+        <el-form-item label="休假时长">{{ applyForm.leaveTime }}</el-form-item>
         <el-form-item label="休假原因" prop="reasons">
           <el-input
             type="textarea"
@@ -132,14 +141,51 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 休假申请详情表单 -->
+    <el-dialog
+      title="休假申请详情"
+      v-model="showDetailModel"
+      :center="true"
+      width="700px"
+    >
+      <el-steps
+        :active="detail.applyState > 2 ? 3 : detail.applyState"
+        align-center
+      >
+        <el-step title="待审批"></el-step>
+        <el-step title="审批中"></el-step>
+        <el-step title="审批通过/审批拒绝"></el-step>
+      </el-steps>
+      <el-form label-width="100px" label-suffix=":">
+        <el-form-item label="休假类型">
+          <div>{{ detail.applyTypeName }}</div>
+        </el-form-item>
+        <el-form-item label="休假时间">
+          <div>{{ detail.time }}</div>
+        </el-form-item>
+        <el-form-item label="休假时长">
+          <div>{{ detail.leaveTime }}</div>
+        </el-form-item>
+        <el-form-item label="休假原因">
+          <div>{{ detail.reasons }}</div>
+        </el-form-item>
+        <el-form-item label="审批状态">
+          <div>{{ detail.applyStateName }}</div>
+        </el-form-item>
+        <el-form-item label="审批人">
+          <div>{{ detail.curAuditUserName }}</div>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, toRaw, onMounted, nextTick } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import api from "../api/index.js";
 import utils from "../utils/utils";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
+import { ElMessage } from "element-plus";
 // 中文相关配置
 const locale = zhCn;
 
@@ -159,14 +205,16 @@ const pager = reactive({
 
 // 创建休假弹框表单
 const applyForm = reactive({
-  applyType: "",
+  leaveTime: "0天",
 });
+// 创建休假申请详情对象
+const detail = reactive({});
 // 定义用户操作行为
 const action = ref("");
-// 定义表单校验规则
-const rules = reactive([]);
-// 弹框显示对象
+// 控制休假申请对话框显示和隐藏对象
 const showModel = ref(false);
+// 控制休假申请详情对话框显示和隐藏对象
+const showDetailModel = ref(false);
 // 初始化用户表单元素对象
 const validateForm = ref(null);
 // 初始化dialog表单元素对象
@@ -239,6 +287,39 @@ const columns = reactive([
     },
   },
 ]);
+// 定义表单校验规则
+const rules = reactive({
+  applyType: [
+    {
+      required: true,
+      message: "请选择休假类型",
+      trigger: "change",
+    },
+  ],
+  startTime: [
+    {
+      type: "date",
+      required: true,
+      message: "请选择开始日期",
+      trigger: "change",
+    },
+  ],
+  endTime: [
+    {
+      type: "date",
+      required: true,
+      message: "请选择结束日期",
+      trigger: "change",
+    },
+  ],
+  reasons: [
+    {
+      required: true,
+      message: "请输入休假原因",
+      trigger: "change",
+    },
+  ],
+});
 
 // 初始化接口调用
 onMounted(() => {
@@ -249,7 +330,6 @@ onMounted(() => {
  * @description: 分页事件处理
  */
 const handleCurrentChange = (current) => {
-  console.log(current);
   pager.pageNum = current;
   getUserList();
 };
@@ -292,9 +372,94 @@ const handleClose = () => {
 };
 
 /**
+ * @description: 获取休假时长
+ */
+const handleDateChange = (key) => {
+  let { startTime, endTime } = applyForm;
+  if (!startTime || !endTime) return;
+  if (startTime > endTime) {
+    ElMessage({
+      message: "开始日期不能晚于结束日期",
+      type: "error",
+    });
+    applyForm.leaveTime = "0天";
+    applyForm[key] = "";
+  } else {
+    applyForm.leaveTime =
+      (endTime - startTime) / (24 * 60 * 60 * 1000) + 1 + "天";
+  }
+};
+
+/**
+ * @description: 查看休假详情
+ */
+const handleDetail = (row) => {
+  showDetailModel.value = true;
+  let data = { ...row };
+  data.applyTypeName = {
+    1: "事假",
+    2: "调休",
+    3: "年假",
+  }[data.applyType];
+  data.time = `${utils.formateDate(
+    new Date(data.startTime),
+    "yyyy-MM-dd"
+  )}到${utils.formateDate(new Date(data.endTime), "yyyy-MM-dd")}`;
+  data.applyStateName = {
+    1: "待审批",
+    2: "审批中",
+    3: "审批拒绝",
+    4: "审批通过",
+    5: "作废",
+  }[data.applyState];
+  Object.assign(detail, data);
+};
+
+/**
+ * @description: 休假申请作废
+ */
+const handleDelete = async (_id) => {
+  try {
+    let res = await api.applySubmit({ _id, action: "delete" });
+    if (res) {
+      ElMessage({
+        message: "删除成功",
+        duration: 2000,
+        type: "success",
+      });
+      getApplyList();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
  * @description: 申请提交
  */
-const handleSubmit = () => {};
+const handleSubmit = () => {
+  dialogForm.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        let params = { ...applyForm, action: action.value };
+        let res = await api.applySubmit(params);
+        if (res) {
+          ElMessage({
+            message: "申请已上交",
+            duration: 2000,
+            type: "success",
+          });
+          showModel.value = false;
+          handleReset(dialogForm.value);
+          applyForm.leaveTime = "0天";
+          getApplyList();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
+};
 </script>
 
 <style lang="scss">
