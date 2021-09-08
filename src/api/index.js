@@ -1,7 +1,7 @@
 /*
  * @Author: 胡晨明
  * @Date: 2021-08-15 21:11:23
- * @LastEditTime: 2021-08-31 15:35:41
+ * @LastEditTime: 2021-09-07 22:29:32
  * @LastEditors: Please set LastEditors
  * @Description: api 管理
  * @FilePath: \bloge:\Vue_store\manager-fe\src\api\index.js
@@ -133,7 +133,7 @@ export default {
       method: 'get',
       url: '/leave/list',
       data: params,
-      mock: true
+      mock: false
     })
   },
   applySubmit(params) {
@@ -141,7 +141,15 @@ export default {
       method: 'post',
       url: '/leave/operate',
       data: params,
-      mock: true
+      mock: false
     })
-  }
+  },
+  approveSubmit(params) {
+    return request({
+      method: 'post',
+      url: '/leave/approve',
+      data: params,
+      mock: false
+    })
+  },
 }
