@@ -20,5 +20,8 @@ export default {
   saveUserActionList(state, payload) {
     state.actionList = payload
     storage.setItem('actionList', payload)
+  },
+  changeNoticeCount(state, payload) {
+    state.noticeCount += payload
   }
 }

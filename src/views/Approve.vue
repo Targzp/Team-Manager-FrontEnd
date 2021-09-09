@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-21 21:08:11
- * @LastEditTime: 2021-09-09 00:47:24
+ * @LastEditTime: 2021-09-09 21:27:29
  * @LastEditors: Please set LastEditors
  * @Description: 待审批页面组件
  * @FilePath: \bloge:\Vue_store\manager-fe\src\views\User.vue
@@ -273,6 +273,7 @@ const getApplyList = async function () {
     const { list, page } = await api.getApplyList(params);
     applyList.value = list;
     pager.total = page.total;
+    return list;
   } catch (error) {
     console.log(error);
   }
@@ -281,12 +282,17 @@ const getApplyList = async function () {
 /**
  * @description: 当审批人待审批列表为空自动跳转到审批中列表
  */
-watch(applyList, (applyList) => {
+/* watch(applyList, async (applyList) => {
   if (applyList.length === 0) {
     queryForm.applyState = 2;
-    getApplyList();
+    let list = await getApplyList();
+    ElMessage({
+      message: `您有${list.length}条待审批`,
+      duration: 2000,
+      type: "success",
+    });
   }
-});
+}); */
 
 /**
  * @description: 重置查询表单
@@ -320,6 +326,9 @@ const handleDetail = (row) => {
   Object.assign(detail, data);
 };
 
+/**
+ * @description: 审核提交
+ */
 const handleApprove = (action) => {
   dialogForm.value.validate(async (valid) => {
     if (valid) {
@@ -335,6 +344,7 @@ const handleApprove = (action) => {
           showDetailModel.value = false;
           handleReset(dialogForm.value);
           getApplyList();
+          store.commit("changeNoticeCount", -1);
         }
       } catch (error) {
         console.log(error);

@@ -1,7 +1,7 @@
 <!--
  * @Author: 胡晨明
  * @Date: 2021-08-15 15:53:55
- * @LastEditTime: 2021-09-03 22:08:50
+ * @LastEditTime: 2021-09-09 21:22:49
  * @LastEditors: Please set LastEditors
  * @Description: 首页
  * @FilePath: \bloge:\Vue_store\manager-fe\src\components\Home.vue
@@ -37,7 +37,12 @@
           </div>
         </div>
         <div class="user-info">
-          <el-badge :is-dot="!!noticeCount" class="notice" type="danger">
+          <el-badge
+            :is-dot="!!noticeCount"
+            class="notice"
+            type="danger"
+            @click="handleNotice"
+          >
             <i class="el-icon-bell"></i>
           </el-badge>
           <el-dropdown @command="handleLogOut">
@@ -72,7 +77,6 @@
 <script>
 import TreeMenu from "./TreeMenu.vue";
 import BreadCrumb from "./BreadCrumb.vue";
-import Welcome from "../views/Welcome.vue";
 export default {
   name: "Home",
   components: {
@@ -83,10 +87,14 @@ export default {
     return {
       isCollapse: false,
       userInfo: this.$store.state.userInfo,
-      noticeCount: 0,
       userMenu: [],
       activeMenu: location.hash.slice(1),
     };
+  },
+  computed: {
+    noticeCount() {
+      return this.$store.state.noticeCount;
+    },
   },
   mounted() {
     this.getNoticeCount();
@@ -127,12 +135,23 @@ export default {
       this.$router.push("/login");
     },
     /**
+     * @description: 点击通知按钮跳转到审批界面
+     */
+    handleNotice() {
+      if (this.$store.state.noticeCount > 0) {
+        this.activeMenu = "/audit/approve";
+        this.$router.push("/audit/approve");
+      } else {
+        return;
+      }
+    },
+    /**
      * @description: 获取通知消息数量
      */
     async getNoticeCount() {
       try {
         const count = await this.$api.noticeCount();
-        this.noticeCount = count;
+        this.$store.commit("changeNoticeCount", count);
       } catch (error) {
         console.log(error);
       }
@@ -236,6 +255,7 @@ export default {
         .notice {
           line-height: 25px;
           margin-right: 15px;
+          cursor: pointer;
         }
         .user-link {
           cursor: pointer;
